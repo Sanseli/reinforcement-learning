@@ -11,9 +11,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "inquirer": "^7.0.0",
     "nuxt": "^2.0.0"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "@nuxtjs/vuetify": "^1.0.0"
   }
 }
