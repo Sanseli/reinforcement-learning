@@ -3,13 +3,14 @@
     <canvas
       ref="canvas"
       id="drawing-pad"
-      width="256" height="256"
+      width="450" height="450"
     ></canvas>
-    <div>
-      <v-btn @click='resetCanvas'>Canvas</v-btn>
+    <v-row style="margin: 0 2em;">
+      <v-btn @click='resetCanvas'>Reset</v-btn>
+      <v-spacer/>
       <v-btn @click='predict'>Predict</v-btn>
 <!--      <v-btn @click='replay'>Replay</v-btn>-->
-    </div>
+    </v-row>
 
   </div>
 </template>
@@ -88,7 +89,7 @@
               this.points.length = 0; // reset points array
           },
           predict() {
-              const context = this.canvas.getContext('2d')
+              const context = this.canvas.getContext('2d');
               const imgData = new Uint8Array(context.getImageData(0, 0, this.canvas.width, this.canvas.height).data.buffer);
               console.log(imgData)
           },
@@ -134,8 +135,9 @@
 
 <style>
   canvas {
-    border: 1px solid red;
+    border: 1px solid black;
     cursor:crosshair;
     background-color: #F5F5F5;
+    margin: 1em;
   }
 </style>
