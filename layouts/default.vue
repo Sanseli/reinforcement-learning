@@ -102,6 +102,11 @@ export default {
           icon: 'fa-pencil-ruler',
           title: 'Predict',
           to: '/'
+        },
+        {
+          icon: 'fa-th',
+          title: 'Sliding puzzle',
+          to: '/sliding-puzzle'
         }
       ],
       miniVariant: false,

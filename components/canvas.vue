@@ -9,7 +9,7 @@
       <v-btn @click='resetCanvas'>Reset</v-btn>
       <v-spacer/>
       <v-btn @click='predict'>Predict</v-btn>
-<!--      <v-btn @click='replay'>Replay</v-btn>-->
+      <v-btn @click='replay'>Replay</v-btn>
     </v-row>
 
   </div>
@@ -92,6 +92,7 @@
               const context = this.canvas.getContext('2d');
               const imgData = new Uint8Array(context.getImageData(0, 0, this.canvas.width, this.canvas.height).data.buffer);
               console.log(imgData)
+              this.$emit('predict', imgData)
           },
           replay() {
               var vm = this
