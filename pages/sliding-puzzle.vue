@@ -1,9 +1,9 @@
 <template>
   <v-container fluid>
-    <label hidden>{{ count}}</label>
-    <v-row class="text-center">
-      <h1 v-if="solved">Puzzle is solved!</h1>
+    <v-row justify="center" style="height: 3em;">
+      <h1>{{getMessage()}}</h1>
     </v-row>
+    <label hidden>{{ count}}</label>
     <v-row style="padding-top: 5em">
       <v-col>
         <v-row
@@ -103,7 +103,6 @@
                 solved: false,
                 shuffling: false,
                 indexShuffle: 1
-
             }
         },
         methods: {
@@ -223,6 +222,15 @@
                 if (value === 0) {
                     return 'red'
                 }
+            },
+            getMessage() {
+                if (this.shuffling) {
+                    return 'Shuffling...'
+                }
+                else if (this.solved) {
+                    return 'Puzzle is solved!'
+                }
+                else return ''
             }
         }
     }
