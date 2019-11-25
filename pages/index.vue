@@ -1,37 +1,6 @@
 <template>
-  <v-layout
-    column
-    justify-center
-    align-center
-  >
-    <v-flex
-      xs12
-      sm8
-      md6
-    >
-      <div class="text-center">
-        <my-canvas @predict="predict"></my-canvas>
-      </div>
-    </v-flex>
-  </v-layout>
+  <div>
+    <h1>Welcome to the reinforcement learning workshop!</h1>
+    <h2>Please choose a project to get started.</h2>
+  </div>
 </template>
-
-<script>
-import myCanvas from "../components/canvas";
-
-export default {
-    components: {
-        myCanvas
-    },
-    methods: {
-        predict(data) {
-            let tf = document.createElement('script');
-            tf.setAttribute('src', 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.14.1/dist/tf.min.js')
-
-            const preds = model.predict(tf.tensor(data).reshape([1, 64, -1]))
-            const { values, indices } = tf.topk(preds, 3)
-            tf.loadModel('./model/model.json')
-        }
-    }
-}
-</script>
