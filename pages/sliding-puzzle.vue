@@ -46,8 +46,8 @@
             <v-btn block @click="solve" :disabled="shuffling">
               Solve
             </v-btn>
-            <v-btn block @click="solveRequest" >
-              Solve request
+            <v-btn block @click="solvemqtt" >
+              Solve mqtt
             </v-btn>
           </v-col>
         </v-row>
@@ -120,62 +120,64 @@
                 }, 200)
 
             },
-            async solveRequest() {
+            async solve() {
 
                 this.solutions = await this.$axios.$get(`http://localhost:8881/solve?grid=[[${this.grid[0][0]}, ${this.grid[0][1]}], [${this.grid[1][0]}, ${this.grid[1][1]}]]`)
-                console.log(this.solutions)
-                this.count += 1
 
-                if (
-                    this.grid[0][0] === 1 &&
-                    this.grid[0][1] === 2 &&
-                    this.grid[1][0] === 3 &&
-                    this.grid[1][1] === 0
-                ) {
-                    this.solved = true;
-                }
-                else {
-                    const solution = this.findAction();
+                if (this.solutions.length !== 0) {
+                    this.count += 1
 
-                    if (solution === false) {
-                        this.snackbar = true;
-                        setTimeout(()=> {
-                            this.shuffle()
-                        }, 1000)
-                    }
-                    else {
-                        setTimeout(()=> {
-                            this.switchNumbers(solution.action, 'solve')
-                        }, 1000)
+                    if (
+                        this.grid[0][0] === 1 &&
+                        this.grid[0][1] === 2 &&
+                        this.grid[1][0] === 3 &&
+                        this.grid[1][1] === 0
+                    ) {
+                        this.solved = true;
+                    } else {
+                        const solution = this.findAction();
+
+                        if (solution === false) {
+                            this.snackbar = true;
+                            setTimeout(() => {
+                                this.shuffle()
+                            }, 1000)
+                        } else {
+                            setTimeout(() => {
+                                this.switchNumbers(solution.action, 'solve')
+                            }, 1000)
+                        }
                     }
                 }
             },
-            solve() {
-                this.count += 1
+            solvemqtt() {
 
-                if (
-                    this.grid[0][0] === 1 &&
-                    this.grid[0][1] === 2 &&
-                    this.grid[1][0] === 3 &&
-                    this.grid[1][1] === 0
-                ) {
-                    this.solved = true;
-                }
-                else {
-                    const solution = this.findAction();
-
-                    if (solution === false) {
-                        this.snackbar = true;
-                        setTimeout(()=> {
-                            this.shuffle()
-                        }, 1000)
-                    }
-                    else {
-                        setTimeout(()=> {
-                            this.switchNumbers(solution.action, 'solve')
-                        }, 1000)
-                    }
-                }
+                this.$mqtt.subscribe('param/param/param/test', options)
+                // this.count += 1
+                //
+                // if (
+                //     this.grid[0][0] === 1 &&
+                //     this.grid[0][1] === 2 &&
+                //     this.grid[1][0] === 3 &&
+                //     this.grid[1][1] === 0
+                // ) {
+                //     this.solved = true;
+                // }
+                // else {
+                //     const solution = this.findAction();
+                //
+                //     if (solution === false) {
+                //         this.snackbar = true;
+                //         setTimeout(()=> {
+                //             this.shuffle()
+                //         }, 1000)
+                //     }
+                //     else {
+                //         setTimeout(()=> {
+                //             this.switchNumbers(solution.action, 'solve')
+                //         }, 1000)
+                //     }
+                // }
             },
             findAction() {
                 let solved = false;

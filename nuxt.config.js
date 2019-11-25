@@ -30,6 +30,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    '@nuxtjs/vue-mqtt'
   ],
   /*
   ** Nuxt.js dev-modules
