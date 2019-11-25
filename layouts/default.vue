@@ -99,9 +99,14 @@ export default {
       fixed: false,
       items: [
         {
+          icon: 'fa-home',
+          title: 'Home',
+          to: '/'
+        },
+        {
           icon: 'fa-pencil-ruler',
           title: 'Predict',
-          to: '/'
+          to: '/predict'
         },
         {
           icon: 'fa-th',
