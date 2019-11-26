@@ -14,9 +14,9 @@ client.on("connect",  () => {
 
 client.on('message', function (topic, payload, message) {
   // message is Buffer
+  store.commit('increment', message.toString())
   console.log(message.toString())
 });
-
 // Vue.use(VueMqtt, client, options);
 
 
@@ -71,11 +71,12 @@ client.on('message', function (topic, payload, message) {
 //     }
 //   },
 //   methods: {
-//     clickSub: function(val) {
-//       this.$mqtt.subscribe('2tp/test')
-//     },
-//     clickPub: function(val) {
-//       this.$mqtt.publish('2tp/test', 'message')
-//     }
-//   }
+    // clickSub: function(val) {
+    //   this.$mqtt.subscribe('2tp/test')
+    // },
+    // clickPub: function(val) {
+    //   this.$mqtt.publish('2tp/test', 'message')
+    // }
+    // ...mapMutations(['addData'])
+  // }
 // })
