@@ -3,11 +3,13 @@
       <v-col>
         <v-row
           v-for="row in 6"
+          v-bind:key="row"
           align="center"
           justify="center"
         >
           <v-card
             v-for="col in 6"
+            v-bind:key="col"
             tile
             style="border: 0; box-shadow: 0 0 0 0.5px rgba(9,90,34,0.66);"
             width="5em"
@@ -65,6 +67,9 @@
             finish: false
         }
       },
+      beforeMount() {
+          // this.$mqtt.subscribe('2tp/test')
+      },
       methods: {
           getImg(row, col) {
               for (let i = 0; i < this.holes.length; i++) {
@@ -101,6 +106,12 @@
               }
               return hidden
           }
-      }
+      },
+      // mqtt: {
+      //     /** 'VueMqtt/publish2' or '+/publish2' */
+      //     '+/publish2' (data) {
+      //         console.log(data)
+      //     }
+      // }
   }
 </script>

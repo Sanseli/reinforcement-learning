@@ -30,13 +30,15 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@nuxtjs/vue-mqtt'
+    '@/plugins/vue-mqtt'
+
   ],
   /*
   ** Nuxt.js dev-modules
   */
   buildModules: [
     '@nuxtjs/vuetify',
+
   ],
   /*
   ** Nuxt.js modules
@@ -77,5 +79,6 @@ export default {
     */
     extend (config, ctx) {
     }
-  }
+  },
+
 }
