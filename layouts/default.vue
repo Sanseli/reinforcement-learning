@@ -109,9 +109,14 @@ export default {
           to: '/predict'
         },
         {
-          icon: 'fa-th',
+          icon: 'fa-puzzle-piece',
           title: 'Sliding puzzle',
           to: '/sliding-puzzle'
+        },
+        {
+          icon: 'fa-th',
+          title: 'Gridworld',
+          to: '/gridworld'
         }
       ],
       miniVariant: false,
