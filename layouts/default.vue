@@ -99,14 +99,24 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'fa-pencil-ruler',
-          title: 'Predict',
+          icon: 'fa-home',
+          title: 'Home',
           to: '/'
         },
         {
-          icon: 'fa-th',
+          icon: 'fa-pencil-ruler',
+          title: 'Predict',
+          to: '/predict'
+        },
+        {
+          icon: 'fa-puzzle-piece',
           title: 'Sliding puzzle',
           to: '/sliding-puzzle'
+        },
+        {
+          icon: 'fa-th',
+          title: 'Gridworld',
+          to: '/gridworld'
         }
       ],
       miniVariant: false,
