@@ -1,6 +1,8 @@
 <template>
   <v-container fluid>
-      <v-col>
+    <div class="sub" v-html="buff">
+    </div>
+    <v-col>
         <v-row
           v-for="row in 6"
           align="center"
@@ -38,7 +40,8 @@
 </template>
 
 <script>
-    import { mapGetters } from 'vuex'
+    import {mapGetters, mapState} from 'vuex'
+    import data from '../plugins/vue-mqtt'
   export default {
       data() {
         return {
@@ -64,10 +67,14 @@
             ],
             start: [6, 1],
             end: [1, 6],
-            finish: false
+            finish: false,
+
+            buff: 'Sub1:<br>'
+
         }
       },
       beforeMount() {
+          this.$mqtt.subscribe('2tp/workshop/qtable')
       },
       methods: {
           getImg(row, col) {
@@ -106,9 +113,24 @@
               return hidden
           },
           getStoreData() {
-            console.log(this.getData())
+              this.$store.commit('test', 'testdata')
+              console.log(this.$store.state.message)
           },
-          ...mapGetters(['getData'])
+          ...mapGetters(['getMessage']),
+      },
+      computed: mapState({ message: state => state.message}),
+      watch: {
+          message() {
+              console.log("change")
+          }
+      },
+      mqtt: {
+          /** 'VueMqtt/publish1' or '+/publish1' */
+          '2tp/test' (data) {
+              this.buff = data
+          }
       }
   }
 </script>
+
+

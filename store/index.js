@@ -1,26 +1,26 @@
 import Vuex from 'vuex';
 
-
 const store = () => {
   return new Vuex.Store({
       state: {
-        mqttMessage: ''
+          message: ''
       },
       mutations: {
-        setMqttMessage(state, data) {
-
-
-          state.mqttMessage = data
-
-          console.log(state.mqttMessage)
+        increment(state, data) {
+          state.message = data
+          console.log(state)
         },
+
+        test(state, data) {
+          state.message = data
+        }
 
       },
       getters: {
-        getData: state => {
-          return state.mqttData
-        },
-      }
+        getMessage: state => {
+          return state.message
+        }
+      },
   }
 )};
 

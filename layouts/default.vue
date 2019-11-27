@@ -104,11 +104,6 @@ export default {
           to: '/'
         },
         {
-          icon: 'fa-pencil-ruler',
-          title: 'Predict',
-          to: '/predict'
-        },
-        {
           icon: 'fa-puzzle-piece',
           title: 'Sliding puzzle',
           to: '/sliding-puzzle'
@@ -117,6 +112,10 @@ export default {
           icon: 'fa-th',
           title: 'Gridworld',
           to: '/gridworld'
+        },
+        {
+            title: 'Q Table',
+            to: '/q-table'
         }
       ],
       miniVariant: false,
