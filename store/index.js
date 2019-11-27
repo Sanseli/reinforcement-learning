@@ -1,13 +1,18 @@
 import Vuex from 'vuex';
 
+
 const store = () => {
   return new Vuex.Store({
       state: {
-        mqttData: []
+        mqttMessage: ''
       },
       mutations: {
-        increment (state, data) {
-            state.mqttData.push(data);
+        setMqttMessage(state, data) {
+
+
+          state.mqttMessage = data
+
+          console.log(state.mqttMessage)
         },
 
       },
@@ -15,7 +20,7 @@ const store = () => {
         getData: state => {
           return state.mqttData
         },
-      },
+      }
   }
 )};
 

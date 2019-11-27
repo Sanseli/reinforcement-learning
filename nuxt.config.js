@@ -31,7 +31,6 @@ export default {
   */
   plugins: [
     '@/plugins/vue-mqtt'
-
   ],
   /*
   ** Nuxt.js dev-modules

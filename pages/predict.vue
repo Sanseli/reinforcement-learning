@@ -10,7 +10,7 @@
       md6
     >
       <div class="text-center">
-        <my-canvas @predict="predict"></my-canvas>
+        <my-canvas @predict="predict" v-if="canvasActive"></my-canvas>
       </div>
     </v-flex>
   </v-layout>
@@ -20,6 +20,11 @@
     import myCanvas from "../components/canvas";
 
     export default {
+        data() {
+            return {
+                canvasActive: false
+            }
+        },
         components: {
             myCanvas
         },

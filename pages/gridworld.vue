@@ -3,13 +3,11 @@
       <v-col>
         <v-row
           v-for="row in 6"
-          v-bind:key="row"
           align="center"
           justify="center"
         >
           <v-card
             v-for="col in 6"
-            v-bind:key="col"
             tile
             style="border: 0; box-shadow: 0 0 0 0.5px rgba(9,90,34,0.66);"
             width="5em"
@@ -35,89 +33,82 @@
           </v-card>
         </v-row>
       </v-col>
-      <v-btn
-       @click="getStoreData"
-      >
-        get store data
-      </v-btn>
+      <v-btn @click="getStoreData">get data</v-btn>
   </v-container>
 </template>
 
 <script>
     import { mapGetters } from 'vuex'
+  export default {
+      data() {
+        return {
+            holes: [
+                [1, 2],
+                [2, 4]
+            ],
+            obstacles: [
+                [2, 2],
+                [3, 2],
+                [3, 5],
+                [3, 6],
+                [4, 2],
+                [4, 3],
+                [4, 5],
+                [5, 3],
+                [5, 6]
+            ],
+            footsteps: [
+                [1, 3],
+                [1, 4],
+                [1, 5]
+            ],
+            start: [6, 1],
+            end: [1, 6],
+            finish: false
+        }
+      },
+      beforeMount() {
+      },
+      methods: {
+          getImg(row, col) {
+              for (let i = 0; i < this.holes.length; i++) {
+                  if (row === this.holes[i][0] && col === this.holes[i][1]) {
+                      return require("~/assets/gridworld/hole2.png")
+                  }
+              }
 
-    export default {
-        data() {
-            return {
-                holes: [
-                    [1, 2],
-                    [2, 4]
-                ],
-                obstacles: [
-                    [2, 2],
-                    [3, 2],
-                    [3, 5],
-                    [3, 6],
-                    [4, 2],
-                    [4, 3],
-                    [4, 5],
-                    [5, 3],
-                    [5, 6]
-                ],
-                footsteps: [
-                    [1, 3],
-                    [1, 4],
-                    [1, 5]
-                ],
-                start: [6, 1],
-                end: [1, 6],
-                finish: false
-            }
-        },
-        beforeMount() {
-            // this.$mqtt.subscribe('2tp/test')
-        },
-        methods: {
-            getImg(row, col) {
-                for (let i = 0; i < this.holes.length; i++) {
-                    if (row === this.holes[i][0] && col === this.holes[i][1]) {
-                        return require("~/assets/gridworld/hole2.png")
-                    }
-                }
+              for (let i = 0; i < this.obstacles.length; i++) {
+                  if (row === this.obstacles[i][0] && col === this.obstacles[i][1]) {
+                      return  require("~/assets/gridworld/obstacle2.png")
+                  }
+              }
 
-                for (let i = 0; i < this.obstacles.length; i++) {
-                    if (row === this.obstacles[i][0] && col === this.obstacles[i][1]) {
-                        return  require("~/assets/gridworld/obstacle2.png")
-                    }
-                }
+              if (row === this.end[0] && col === this.end[1]) {
+                  if (this.finish) {
+                      return require("~/assets/gridworld/chest_open.png")
+                  }
+                  else return require("~/assets/gridworld/chest_closed.png")
+              }
 
-                if (row === this.end[0] && col === this.end[1]) {
-                    if (this.finish) {
-                        return require("~/assets/gridworld/chest_open.png")
-                    }
-                    else return require("~/assets/gridworld/chest_closed.png")
-                }
+              if (row === this.start[0] && col === this.start[1]) {
+                  return require("~/assets/gridworld/start2.png")
+              }
 
-                if (row === this.start[0] && col === this.start[1]) {
-                    return require("~/assets/gridworld/start2.png")
-                }
-
-                return require("~/assets/gridworld/path.png")
-            },
-            footstepsActive(row, col) {
-                let hidden = true;
-                for (let i = 0; i < this.footsteps.length; i++) {
-                    if (row === this.footsteps[i][0] && col === this.footsteps[i][1]) {
-                        hidden = false;
-                    }
-                }
-                return hidden
-            },
-            getStoreData() {
-              console.log(this.getData())
-            },
-            ...mapGetters(["getData"])
-        },
-
-    }
+              return require("~/assets/gridworld/path.png")
+          },
+          footstepsActive(row, col) {
+              let hidden = true;
+              for (let i = 0; i < this.footsteps.length; i++) {
+                  if (row === this.footsteps[i][0] && col === this.footsteps[i][1]) {
+                      hidden = false;
+                  }
+              }
+              return hidden
+          },
+          getStoreData() {
+            console.log(this.getData())
+          },
+          ...mapGetters(['getData'])
+      }
+  }
 </script>

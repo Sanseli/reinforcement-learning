@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueMqtt from 'vue-mqtt';
-import options from "../.nuxt/vuetify/options";
+import store from "../store/index"
+
 //1883
 
 var mqtt = require('mqtt')
@@ -14,9 +15,9 @@ client.on("connect",  () => {
 
 client.on('message', function (topic, payload, message) {
   // message is Buffer
-  store.commit('increment', message.toString())
-  console.log(message.toString())
+  store().commit('setMqttMessage', payload.toString())
 });
+
 // Vue.use(VueMqtt, client, options);
 
 
