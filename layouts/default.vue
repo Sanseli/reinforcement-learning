@@ -114,6 +114,7 @@ export default {
           to: '/gridworld'
         },
         {
+            icon: 'fa-table',
             title: 'Q Table',
             to: '/q-table'
         }

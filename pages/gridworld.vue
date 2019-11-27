@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
-    <div class="sub" v-html="buff">
-    </div>
+{{buff}}
     <v-col>
         <v-row
           v-for="row in 6"
@@ -35,13 +34,10 @@
           </v-card>
         </v-row>
       </v-col>
-      <v-btn @click="getStoreData">get data</v-btn>
   </v-container>
 </template>
 
 <script>
-    import {mapGetters, mapState} from 'vuex'
-    import data from '../plugins/vue-mqtt'
   export default {
       data() {
         return {
@@ -69,12 +65,12 @@
             end: [1, 6],
             finish: false,
 
-            buff: 'Sub1:<br>'
+            buff: []
 
         }
       },
       beforeMount() {
-          this.$mqtt.subscribe('2tp/workshop/qtable')
+          this.$mqtt.subscribe('2tp/workshop/gridworld/state')
       },
       methods: {
           getImg(row, col) {
@@ -112,22 +108,10 @@
               }
               return hidden
           },
-          getStoreData() {
-              this.$store.commit('test', 'testdata')
-              console.log(this.$store.state.message)
-          },
-          ...mapGetters(['getMessage']),
-      },
-      computed: mapState({ message: state => state.message}),
-      watch: {
-          message() {
-              console.log("change")
-          }
       },
       mqtt: {
-          /** 'VueMqtt/publish1' or '+/publish1' */
-          '2tp/test' (data) {
-              this.buff = data
+          '2tp/workshop/gridworld/state' (data) {
+              this.buff = JSON.parse(data)
           }
       }
   }
