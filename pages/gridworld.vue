@@ -31,7 +31,7 @@
                       <v-img
                         v-if="col === end[0] && row === end[1]"
                         :src="getChestImg()"
-                        style="margin-left: 20%; position: absolute"
+                        style="margin-left: 20%; position: absolute; margin-top: 10%;"
                         width="48px"
                       ></v-img>
 
@@ -61,6 +61,12 @@
                     height="5em"
                     :color="getColor(row, col)"
                   >
+                      <v-img
+                          width="30px"
+                          v-for="action of findActions(row, col)"
+                          :src="require('~/assets/gridworld/arrow.png')"
+                          :class="'arr'+ action"
+                      ></v-img>
                   </v-card>
               </v-row>
           </v-col>
@@ -85,7 +91,7 @@
 
               // Grid 2
               bestPath: [],
-              bestActions: []
+              bestActions: [],
           }
       },
       beforeMount() {
@@ -148,8 +154,15 @@
           // Grid 2
           getColor(row, col) {
               for (let i = 0; i < this.bestPath.length; i++) {
-                  if (col -1 === this.bestPath[i][0] && row -1 === this.bestPath[i][1]) {
+                  if (col === this.bestPath[i][0] && row === this.bestPath[i][1]) {
                       return 'white'
+                  }
+              }
+          },
+          findActions(row, col) {
+              for (let i = 0; i < this.bestActions.length; i++) {
+                  if (this.bestActions[i].y === row && this.bestActions[i].x === col) {
+                      return this.bestActions[i].actions
                   }
               }
           }
@@ -175,5 +188,29 @@
       }
   }
 </script>
+
+<style>
+  .arrUp {
+    transform: rotateZ(-90deg);
+    left: 30%;
+    position: absolute;
+  }
+  .arrLeft {
+    transform: rotateZ(180deg);
+    position: absolute;
+    top: 30%
+  }
+  .arrRight {
+    position: absolute;
+    top: 30%;
+    left: 60%;
+  }
+  .arrDown {
+    position: absolute;
+    transform: rotateZ(90deg);
+    top: 60%;
+    left: 30%;
+  }
+</style>
 
 
