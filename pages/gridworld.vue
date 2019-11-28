@@ -1,117 +1,176 @@
 <template>
   <v-container fluid>
-{{buff}}
-    <v-col>
-        <v-row
-          v-for="row in 6"
-          align="center"
-          justify="center"
-        >
-          <v-card
-            v-for="col in 6"
-            tile
-            style="border: 0; box-shadow: 0 0 0 0.5px rgba(9,90,34,0.66);"
-            width="5em"
-            height="5em"
-            :img="getImg(row, col)"
-          >
+      <v-row>
+          <v-col>
+              <v-row
+                v-if="rows > 0"
+                v-for="row in rows"
+                align="center"
+                justify="center"
+              >
+                  <v-card
+                    v-if="cols > 0"
+                    v-for="col in cols"
+                    tile
+                    style="border: 0; box-shadow: 0 0 0 0.5px rgba(9,90,34,0.66);"
+                    width="5em"
+                    height="5em"
+                    :img="getImg(row, col)"
+                  >
 
-            <v-img
-              v-if="row === start[0] && col === start[1]"
-              style="margin-left: 30%; margin-top: 30%"
-              height="45px"
-              width="30px"
-              :src="require('~/assets/gridworld/char_right.png')"
-            ></v-img>
+                      <v-img
+                        v-if="footstepsActive(row, col)"
+                        style="margin-left: 30%; margin-top: 65%;position: absolute"
+                        height="16px"
+                        width="30px"
+                        position="absolute"
 
-            <v-img
-              :hidden="footstepsActive(row, col)"
-              style="margin-left: 30%; margin-top: 65%"
-              height="16px"
-              width="30px"
-              :src="require('~/assets/gridworld/footsteps.png')"
-            ></v-img>
-          </v-card>
-        </v-row>
-      </v-col>
+                        :src="require('~/assets/gridworld/footsteps.png')"
+                      ></v-img>
+
+                      <v-img
+                        v-if="col === end[0] && row === end[1]"
+                        :src="getChestImg()"
+                        style="margin-left: 20%; position: absolute"
+                        width="48px"
+                      ></v-img>
+
+                      <v-img
+                        v-if="col === currentPosition[0] && row === currentPosition[1]"
+                        style="margin-left: 30%; margin-top: 30%; position: absolute"
+                        height="45px"
+                        width="30px"
+                        :src="require('~/assets/gridworld/char_down.png')"
+                      ></v-img>
+                  </v-card>
+              </v-row>
+          </v-col>
+          <v-col>
+              <v-row
+                v-if="rows > 0"
+                v-for="row in rows"
+                align="center"
+                justify="center"
+              >
+                  <v-card
+                    v-if="cols > 0"
+                    v-for="col in cols"
+                    tile
+                    style="border: 0; box-shadow: 0 0 0 0.5px #2f2f2f;"
+                    width="5em"
+                    height="5em"
+                    :color="getColor(row, col)"
+                  >
+                  </v-card>
+              </v-row>
+          </v-col>
+      </v-row>
   </v-container>
 </template>
 
 <script>
   export default {
       data() {
-        return {
-            holes: [
-                [1, 2],
-                [2, 4]
-            ],
-            obstacles: [
-                [2, 2],
-                [3, 2],
-                [3, 5],
-                [3, 6],
-                [4, 2],
-                [4, 3],
-                [4, 5],
-                [5, 3],
-                [5, 6]
-            ],
-            footsteps: [
-                [1, 3],
-                [1, 4],
-                [1, 5]
-            ],
-            start: [6, 1],
-            end: [1, 6],
-            finish: false,
+          return {
+              cols: 0,
+              rows: 0,
 
-            buff: []
+              // Grid 1
+              holes: [],
+              obstacles: [],
+              footsteps: [],
+              start: [],
+              end: [],
+              currentPosition: [],
 
-        }
+              // Grid 2
+              bestPath: [],
+              bestActions: []
+          }
       },
       beforeMount() {
           this.$mqtt.subscribe('2tp/workshop/gridworld/state')
       },
       methods: {
+          // Grid 1
           getImg(row, col) {
               for (let i = 0; i < this.holes.length; i++) {
-                  if (row === this.holes[i][0] && col === this.holes[i][1]) {
+                  if (col === this.holes[i][0] && row === this.holes[i][1]) {
                       return require("~/assets/gridworld/hole2.png")
                   }
               }
-
               for (let i = 0; i < this.obstacles.length; i++) {
-                  if (row === this.obstacles[i][0] && col === this.obstacles[i][1]) {
-                      return  require("~/assets/gridworld/obstacle2.png")
+                  if (col === this.obstacles[i][0] && row === this.obstacles[i][1]) {
+                      return require("~/assets/gridworld/obstacle2.png")
                   }
               }
-
-              if (row === this.end[0] && col === this.end[1]) {
-                  if (this.finish) {
-                      return require("~/assets/gridworld/chest_open.png")
-                  }
-                  else return require("~/assets/gridworld/chest_closed.png")
+              if (col === this.start[0] && row === this.start[1]) {
+                  return require("~/assets/gridworld/start.png")
               }
-
-              if (row === this.start[0] && col === this.start[1]) {
-                  return require("~/assets/gridworld/start2.png")
-              }
-
               return require("~/assets/gridworld/path.png")
           },
           footstepsActive(row, col) {
-              let hidden = true;
+              let hidden = false;
               for (let i = 0; i < this.footsteps.length; i++) {
-                  if (row === this.footsteps[i][0] && col === this.footsteps[i][1]) {
-                      hidden = false;
+                  if (col === this.footsteps[i][0] && row === this.footsteps[i][1]) {
+                      hidden = true;
                   }
               }
               return hidden
           },
+          getCharImg(row, col) {
+              let lastposition = this.footsteps[this.footsteps.length -2]
+              console.log(lastposition)
+              if (lastposition !== undefined) {
+                  if (row > lastposition[1]) {
+                      return require("~/assets/gridworld/char_down.png")
+                  }
+                  if (row < lastposition[0]) {
+                      return  require("~/assets/gridworld/char_up.png")
+                  }
+                  if (col > lastposition[0]) {
+                      return require("~/assets/gridworld/char_right.png")
+                  }
+                  if (col < lastposition[1]) {
+                      return  require("~/assets/gridworld/char_left.png")
+                  }
+              }
+              else return require("~/assets/gridworld/char_down.png")
+          },
+          getChestImg() {
+              if (this.end !== undefined) {
+                  if (this.end[0] === this.currentPosition[0] && this.end[1] === this.currentPosition[1]) {
+                      return require("~/assets/gridworld/chest_open1.png")
+                  } else return require("~/assets/gridworld/chest_closed1.png")
+              }
+          },
+
+          // Grid 2
+          getColor(row, col) {
+              for (let i = 0; i < this.bestPath.length; i++) {
+                  if (col -1 === this.bestPath[i][0] && row -1 === this.bestPath[i][1]) {
+                      return 'white'
+                  }
+              }
+          }
       },
       mqtt: {
           '2tp/workshop/gridworld/state' (data) {
-              this.buff = JSON.parse(data)
+              let json = JSON.parse(data)
+              // console.log(json)
+
+              this.cols = parseInt(json.board_setup.nb_cols)
+              this.rows = parseInt(json.board_setup.nb_rows)
+
+              this.holes = json.board_setup.holes
+              this.obstacles = json.board_setup.obstacles
+              this.start = json.board_setup.start
+              this.end = json.board_setup.end[0]
+              this.currentPosition = json.board_setup.footsteps[json.board_setup.footsteps.length -1]
+              this.footsteps = json.board_setup.footsteps
+
+              this.bestActions = json.best_actions
+              this.bestPath = json.best_path_now
           }
       }
   }

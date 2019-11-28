@@ -2,8 +2,6 @@
   <v-container fluid>
     <v-row justify="center" style="height: 3em;">
       <h1>{{getMessage()}}</h1>
-
-      {{this.grid}}
     </v-row>
     <label hidden>{{ count}}</label>
     <v-row style="padding-top: 5em">
@@ -45,9 +43,6 @@
           >
             <v-btn block @click="solve" :disabled="shuffling">
               Solve
-            </v-btn>
-            <v-btn block @click="solvemqtt" >
-              Solve mqtt
             </v-btn>
           </v-col>
         </v-row>
@@ -94,8 +89,13 @@
                 count: 0,
                 solved: false,
                 shuffling: false,
-                indexShuffle: 1
+                indexShuffle: 1,
+
+                buff: []
             }
+        },
+        beforeMount() {
+            this.$mqtt.subscribe('2tp/workshop/slidingpuzzle/state')
         },
         methods: {
             shuffle() {
@@ -149,35 +149,6 @@
                         }
                     }
                 }
-            },
-            solvemqtt() {
-
-                this.$mqtt.subscribe('param/param/param/test', options)
-                // this.count += 1
-                //
-                // if (
-                //     this.grid[0][0] === 1 &&
-                //     this.grid[0][1] === 2 &&
-                //     this.grid[1][0] === 3 &&
-                //     this.grid[1][1] === 0
-                // ) {
-                //     this.solved = true;
-                // }
-                // else {
-                //     const solution = this.findAction();
-                //
-                //     if (solution === false) {
-                //         this.snackbar = true;
-                //         setTimeout(()=> {
-                //             this.shuffle()
-                //         }, 1000)
-                //     }
-                //     else {
-                //         setTimeout(()=> {
-                //             this.switchNumbers(solution.action, 'solve')
-                //         }, 1000)
-                //     }
-                // }
             },
             findAction() {
                 let solved = false;
@@ -255,6 +226,11 @@
                     return 'Puzzle is solved!'
                 }
                 else return ''
+            }
+        },
+        mqtt: {
+            '2tp/workshop/slidingpuzzle/state' (data) {
+                this.buff = JSON.parse(data)
             }
         }
     }
