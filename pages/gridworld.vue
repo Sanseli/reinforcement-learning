@@ -1,5 +1,8 @@
 <template>
   <v-container fluid>
+      <v-row justify="center" style="height: 3em;">
+          <h1>{{message}}</h1>
+      </v-row>
       <v-row>
           <v-col>
               <v-row
@@ -24,7 +27,6 @@
                         height="16px"
                         width="30px"
                         position="absolute"
-
                         :src="require('~/assets/gridworld/footsteps.png')"
                       ></v-img>
 
@@ -41,6 +43,15 @@
                         height="45px"
                         width="30px"
                         :src="require('~/assets/gridworld/char_down.png')"
+                      ></v-img>
+
+                      <v-img
+                        v-if="isHoleActive(row, col)"
+                        :hidden="!hole"
+                        :src="require('~/assets/gridworld/gone.png')"
+                        width="32px"
+                        height="32px"
+                        style="margin-left: 30%; margin-top: 35%"
                       ></v-img>
                   </v-card>
               </v-row>
@@ -80,6 +91,7 @@
           return {
               cols: 0,
               rows: 0,
+              message: '',
 
               // Grid 1
               holes: [],
@@ -92,10 +104,15 @@
               // Grid 2
               bestPath: [],
               bestActions: [],
+              hole: false,
           }
       },
       beforeMount() {
-          this.$mqtt.subscribe('2tp/workshop/gridworld/state')
+          console.log(this.$mqtt)
+          if (this.$mqtt.connected) {
+              this.$mqtt.subscribe('2tp/workshop/gridworld/state')
+          }
+          else this.message = 'Websocket not connected'
       },
       methods: {
           // Grid 1
@@ -116,13 +133,13 @@
               return require("~/assets/gridworld/path.png")
           },
           footstepsActive(row, col) {
-              let hidden = false;
+              let active = false;
               for (let i = 0; i < this.footsteps.length; i++) {
                   if (col === this.footsteps[i][0] && row === this.footsteps[i][1]) {
-                      hidden = true;
+                      active = true;
                   }
               }
-              return hidden
+              return active
           },
           getCharImg(row, col) {
               let lastposition = this.footsteps[this.footsteps.length -2]
@@ -150,6 +167,15 @@
                   } else return require("~/assets/gridworld/chest_closed1.png")
               }
           },
+          isHoleActive(row, col) {
+              for (let i = 0; i < this.holes.length; i++) {
+                  if (col === this.holes[i][0] && row === this.holes[i][1] &&
+                      col === this.currentPosition[0] && row === this.currentPosition[1]) {
+                      this.hole = true;
+                      console.log("hole active")
+                  }
+              }
+          },
 
           // Grid 2
           getColor(row, col) {
@@ -165,10 +191,23 @@
                       return this.bestActions[i].actions
                   }
               }
+          },
+          isChar(row, col) {
+              if (col === this.currentPosition[0] && row === this.currentPosition[1]) {
+                  for (let i = 0; i < this.holes.length; i++) {
+                      if (col === this.holes[i][0] && row === this.holes[i][1]) {
+                          this.hole = true;
+                          return false
+                      }
+                  }
+                  return true
+              }
+              else return false
           }
       },
       mqtt: {
           '2tp/workshop/gridworld/state' (data) {
+              this.hole = false
               let json = JSON.parse(data)
               // console.log(json)
 

@@ -1,9 +1,8 @@
 <template>
   <v-container fluid>
     <v-row justify="center" style="height: 3em;">
-      <h1>{{getMessage()}}</h1>
+      <h1>{{message}}</h1>
     </v-row>
-    <label hidden>{{ count}}</label>
     <v-row style="padding-top: 5em">
       <v-col>
         <v-row
@@ -97,11 +96,16 @@
 
                 cols: 0,
                 rows: 0,
-                state: []
+                state: [],
+
+                message: ''
             }
         },
         beforeMount() {
-            this.$mqtt.subscribe('2tp/workshop/slidingpuzzle/state')
+            if (this.$mqtt.connected) {
+                this.$mqtt.subscribe('2tp/workshop/slidingpuzzle/state')
+            }
+            else this.message = 'Websocket not connected'
         },
         methods: {
             shuffle() {
