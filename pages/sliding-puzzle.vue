@@ -7,55 +7,57 @@
     <v-row style="padding-top: 5em">
       <v-col>
         <v-row
-          v-for="row in 2"
-          v-if="grid.length !== 0"
+          v-for="row in rows"
+          v-if="rows > 0"
           align="center"
           justify="center"
         >
           <v-card
-            v-for="col in 2"
+            v-for="col in cols"
+            v-if="cols > 0"
             class="ma-1 text-center"
             raised
             tile
             width="10em"
             height="10em"
-            :color="getColor(grid[row-1][col-1])"
+            :color="getColor(state[row-1][col-1])"
           >
-            <h1 style="font-size: 5em; padding: 10%">{{grid[row-1][col-1]}}</h1>
+            <h1 v-if="state[row-1][col-1] !== 0" style="font-size: 5em; padding: 10%">{{state[row-1][col-1]}}</h1>
+            <v-img :hidden="state[row-1][col-1] !== 0" :src="require('~/assets/sliding-puzzle/2tp.png')"></v-img>
           </v-card>
         </v-row>
 
       </v-col>
-      <v-col cols="12">
-        <v-row justify="center">
-          <v-col
-            cols="6"
-            md="2"
-          >
-            <v-btn block @click="shuffle" :disabled="shuffling">
-              Shuffle
-            </v-btn>
-          </v-col>
+<!--      <v-col cols="12">-->
+<!--        <v-row justify="center">-->
+<!--          <v-col-->
+<!--            cols="6"-->
+<!--            md="2"-->
+<!--          >-->
+<!--            <v-btn block @click="shuffle" :disabled="shuffling">-->
+<!--              Shuffle-->
+<!--            </v-btn>-->
+<!--          </v-col>-->
 
-          <v-col
-            cols="6"
-            md="2"
-          >
-            <v-btn block @click="solve" :disabled="shuffling">
-              Solve
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-col>
+<!--          <v-col-->
+<!--            cols="6"-->
+<!--            md="2"-->
+<!--          >-->
+<!--            <v-btn block @click="solve" :disabled="shuffling">-->
+<!--              Solve-->
+<!--            </v-btn>-->
+<!--          </v-col>-->
+<!--        </v-row>-->
+<!--      </v-col>-->
     </v-row>
 
-    <v-snackbar
-      top
-      v-model="snackbar"
-      :timeout="2000"
-    >
-      Solution not available for this grid. Reshuffling...
-    </v-snackbar>
+<!--    <v-snackbar-->
+<!--      top-->
+<!--      v-model="snackbar"-->
+<!--      :timeout="2000"-->
+<!--    >-->
+<!--      Solution not available for this grid. Reshuffling...-->
+<!--    </v-snackbar>-->
   </v-container>
 </template>
 
@@ -63,35 +65,39 @@
     export default {
         data () {
             return {
-                alignmentsAvailable: [
-                    'start',
-                    'center',
-                    'end',
-                    'baseline',
-                    'stretch',
-                ],
-                alignment: 'center',
-                dense: false,
-                justifyAvailable: [
-                    'start',
-                    'center',
-                    'end',
-                    'space-around',
-                    'space-between',
-                ],
-                justify: 'center',
+                // alignmentsAvailable: [
+                //     'start',
+                //     'center',
+                //     'end',
+                //     'baseline',
+                //     'stretch',
+                // ],
+                // alignment: 'center',
+                // dense: false,
+                // justifyAvailable: [
+                //     'start',
+                //     'center',
+                //     'end',
+                //     'space-around',
+                //     'space-between',
+                // ],
+                // justify: 'center',
+                //
+                // grid: [[1, 2], [3, 0]],
+                //
+                // solutions: [],
+                //
+                // snackbar: false,
+                // count: 0,
+                // solved: false,
+                // shuffling: false,
+                // indexShuffle: 1,
 
-                grid: [[1, 2], [3, 0]],
+                buff: [],
 
-                solutions: [],
-
-                snackbar: false,
-                count: 0,
-                solved: false,
-                shuffling: false,
-                indexShuffle: 1,
-
-                buff: []
+                cols: 0,
+                rows: 0,
+                state: []
             }
         },
         beforeMount() {
@@ -120,36 +126,36 @@
                 }, 200)
 
             },
-            async solve() {
-
-                this.solutions = await this.$axios.$get(`http://localhost:8881/solve?grid=[[${this.grid[0][0]}, ${this.grid[0][1]}], [${this.grid[1][0]}, ${this.grid[1][1]}]]`)
-
-                if (this.solutions.length !== 0) {
-                    this.count += 1
-
-                    if (
-                        this.grid[0][0] === 1 &&
-                        this.grid[0][1] === 2 &&
-                        this.grid[1][0] === 3 &&
-                        this.grid[1][1] === 0
-                    ) {
-                        this.solved = true;
-                    } else {
-                        const solution = this.findAction();
-
-                        if (solution === false) {
-                            this.snackbar = true;
-                            setTimeout(() => {
-                                this.shuffle()
-                            }, 1000)
-                        } else {
-                            setTimeout(() => {
-                                this.switchNumbers(solution.action, 'solve')
-                            }, 1000)
-                        }
-                    }
-                }
-            },
+            // async solve() {
+            //
+            //     this.solutions = await this.$axios.$get(`http://localhost:8881/solve?grid=[[${this.grid[0][0]}, ${this.grid[0][1]}], [${this.grid[1][0]}, ${this.grid[1][1]}]]`)
+            //
+            //     if (this.solutions.length !== 0) {
+            //         this.count += 1
+            //
+            //         if (
+            //             this.grid[0][0] === 1 &&
+            //             this.grid[0][1] === 2 &&
+            //             this.grid[1][0] === 3 &&
+            //             this.grid[1][1] === 0
+            //         ) {
+            //             this.solved = true;
+            //         } else {
+            //             const solution = this.findAction();
+            //
+            //             if (solution === false) {
+            //                 this.snackbar = true;
+            //                 setTimeout(() => {
+            //                     this.shuffle()
+            //                 }, 1000)
+            //             } else {
+            //                 setTimeout(() => {
+            //                     this.switchNumbers(solution.action, 'solve')
+            //                 }, 1000)
+            //             }
+            //         }
+            //     }
+            // },
             findAction() {
                 let solved = false;
                 let solutionFound = null;
@@ -215,7 +221,7 @@
             },
             getColor(value) {
                 if (value === 0) {
-                    return 'red'
+                    return 'white'
                 }
             },
             getMessage() {
@@ -230,7 +236,12 @@
         },
         mqtt: {
             '2tp/workshop/slidingpuzzle/state' (data) {
-                this.buff = JSON.parse(data)
+                let json = JSON.parse(data)
+                console.log(json)
+
+                this.rows = json.nb_rows
+                this.cols = json.nb_cols
+                this.state = json.state
             }
         }
     }
