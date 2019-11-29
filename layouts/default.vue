@@ -48,41 +48,40 @@
 </template>
 
 <script>
-import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loader
-
-export default {
-  data () {
-    return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'fa-home',
-          title: 'Home',
-          to: '/'
-        },
-        {
-          icon: 'fa-puzzle-piece',
-          title: 'Sliding puzzle',
-          to: '/sliding-puzzle'
-        },
-        {
-          icon: 'fa-th',
-          title: 'Gridworld',
-          to: '/gridworld'
-        },
-        {
-            icon: 'fa-table',
-            title: 'Q Table',
-            to: '/q-table'
+    import '@fortawesome/fontawesome-free/css/all.css' // Ensure you are using css-loader
+    export default {
+        data () {
+            return {
+                clipped: false,
+                drawer: false,
+                fixed: false,
+                items: [
+                    {
+                        icon: 'fa-home',
+                        title: 'Home',
+                        to: '/'
+                    },
+                    {
+                        icon: 'fa-puzzle-piece',
+                        title: 'Sliding puzzle',
+                        to: '/sliding-puzzle'
+                    },
+                    {
+                        icon: 'fa-th',
+                        title: 'Gridworld',
+                        to: '/gridworld'
+                    },
+                    {
+                        icon: 'fa-table',
+                        title: 'Q Table',
+                        to: '/q-table'
+                    }
+                ],
+                miniVariant: false,
+                right: true,
+                rightDrawer: false,
+                title: 'Reinforcement learning '
+            }
         }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Reinforcement learning '
     }
-  }
-}
 </script>
