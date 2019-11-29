@@ -18,11 +18,11 @@
                     style="border: 0; box-shadow: 0 0 0 0.5px rgba(9,90,34,0.66);"
                     width="5em"
                     height="5em"
+                    id="card"
                     :img="getImg(row, col)"
                   >
-
                       <v-img
-                        v-if="footstepsActive(row, col)"
+                        v-show="footstepsActive(row, col)"
                         style="margin-left: 30%; margin-top: 65%;position: absolute"
                         height="16px"
                         width="30px"
@@ -38,21 +38,22 @@
                       ></v-img>
 
                       <v-img
-                        v-if="col === currentPosition[0] && row === currentPosition[1]"
+                        v-show="col === currentPosition[0] && row === currentPosition[1]"
                         style="margin-left: 30%; margin-top: 30%; position: absolute"
                         height="45px"
                         width="30px"
                         :src="require('~/assets/gridworld/char_down.png')"
                       ></v-img>
 
-                      <v-img
-                        v-if="isHoleActive(row, col)"
-                        :hidden="!hole"
-                        :src="require('~/assets/gridworld/gone.png')"
-                        width="32px"
-                        height="32px"
-                        style="margin-left: 30%; margin-top: 35%"
-                      ></v-img>
+<!--                      <v-img-->
+<!--                        v-show="isHoleActive(row, col)"-->
+<!--&lt;!&ndash;                        :hidden="!hole"&ndash;&gt;-->
+<!--                        :src="require('~/assets/gridworld/gone.png')"-->
+<!--                        width="32px"-->
+<!--                        height="32px"-->
+<!--                        style="margin-left: 30%; margin-top: 35%"-->
+<!--                      ></v-img>-->
+
                   </v-card>
               </v-row>
           </v-col>
@@ -105,10 +106,13 @@
               bestPath: [],
               bestActions: [],
               hole: false,
+
+              // Images
+              // img
           }
       },
       beforeMount() {
-          console.log(this.$mqtt)
+          console.log(window.location.hostname)
           if (this.$mqtt.connected) {
               this.$mqtt.subscribe('2tp/workshop/gridworld/state')
           }
@@ -117,48 +121,40 @@
       methods: {
           // Grid 1
           getImg(row, col) {
-              for (let i = 0; i < this.holes.length; i++) {
-                  if (col === this.holes[i][0] && row === this.holes[i][1]) {
+              const obstacle = this.obstacles.find(o => o[0] === col && o[1] === row)
+              if (obstacle !== undefined) {
+                  // for (let i = 0; i < this.obstacles.length; i++) {
+                  //     if (col === this.obstacles[i][0] && row === this.obstacles[i][1]) {
+                  return require("~/assets/gridworld/obstacle3.png")
+                  // }
+              }
+
+              const hole = this.holes.find(h => h[0] === col && h[1] === row)
+              // for (let i = 0; i < this.holes.length; i++) {
+              //     if (col === this.holes[i][0] && row === this.holes[i][1]) {
+              if (hole !== undefined) {
                       return require("~/assets/gridworld/hole2.png")
-                  }
+                  // }
               }
-              for (let i = 0; i < this.obstacles.length; i++) {
-                  if (col === this.obstacles[i][0] && row === this.obstacles[i][1]) {
-                      return require("~/assets/gridworld/obstacle2.png")
-                  }
-              }
+
               if (col === this.start[0] && row === this.start[1]) {
                   return require("~/assets/gridworld/start.png")
               }
+
               return require("~/assets/gridworld/path.png")
           },
           footstepsActive(row, col) {
+              const footstep = this.footsteps.find(f => f[0] === col && f[1] === row)
               let active = false;
-              for (let i = 0; i < this.footsteps.length; i++) {
-                  if (col === this.footsteps[i][0] && row === this.footsteps[i][1]) {
+              if (footstep !== undefined) {
+
+
+              // for (let i = 0; i < this.footsteps.length; i++) {
+              //     if (col === this.footsteps[i][0] && row === this.footsteps[i][1]) {
                       active = true;
-                  }
+                  // }
               }
               return active
-          },
-          getCharImg(row, col) {
-              let lastposition = this.footsteps[this.footsteps.length -2]
-              console.log(lastposition)
-              if (lastposition !== undefined) {
-                  if (row > lastposition[1]) {
-                      return require("~/assets/gridworld/char_down.png")
-                  }
-                  if (row < lastposition[0]) {
-                      return  require("~/assets/gridworld/char_up.png")
-                  }
-                  if (col > lastposition[0]) {
-                      return require("~/assets/gridworld/char_right.png")
-                  }
-                  if (col < lastposition[1]) {
-                      return  require("~/assets/gridworld/char_left.png")
-                  }
-              }
-              else return require("~/assets/gridworld/char_down.png")
           },
           getChestImg() {
               if (this.end !== undefined) {
@@ -168,42 +164,36 @@
               }
           },
           isHoleActive(row, col) {
-              for (let i = 0; i < this.holes.length; i++) {
-                  if (col === this.holes[i][0] && row === this.holes[i][1] &&
-                      col === this.currentPosition[0] && row === this.currentPosition[1]) {
-                      this.hole = true;
-                      console.log("hole active")
-                  }
+              const hole = this.holes.find(h => h[0] === col && h[1] === row)
+              if (hole !== undefined) {
+                  this.hole = true;
+                  console.log("hole active")
               }
           },
 
           // Grid 2
           getColor(row, col) {
-              for (let i = 0; i < this.bestPath.length; i++) {
-                  if (col === this.bestPath[i][0] && row === this.bestPath[i][1]) {
+              // console.log(this.bestPath)
+              const path = this.bestPath.find(p => p[0] === col && p[1] === row)
+              //
+              // console.log(path)
+              if (path !== undefined) {
+              // for (let i = 0; i < this.bestPath.length; i++) {
+              //     if (col === this.bestPath[i][0] && row === this.bestPath[i][1]) {
                       return 'white'
-                  }
+                  // }
               }
           },
           findActions(row, col) {
-              for (let i = 0; i < this.bestActions.length; i++) {
-                  if (this.bestActions[i].y === row && this.bestActions[i].x === col) {
-                      return this.bestActions[i].actions
-                  }
+              const action = this.bestActions.find(a => a.y === row && a.x === col)
+
+              if (action !== undefined) {
+              // for (let i = 0; i < this.bestActions.length; i++) {
+              //     if (this.bestActions[i].y === row && this.bestActions[i].x === col) {
+                      return action.actions
+                  // }
               }
           },
-          isChar(row, col) {
-              if (col === this.currentPosition[0] && row === this.currentPosition[1]) {
-                  for (let i = 0; i < this.holes.length; i++) {
-                      if (col === this.holes[i][0] && row === this.holes[i][1]) {
-                          this.hole = true;
-                          return false
-                      }
-                  }
-                  return true
-              }
-              else return false
-          }
       },
       mqtt: {
           '2tp/workshop/gridworld/state' (data) {
