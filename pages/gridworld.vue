@@ -209,7 +209,7 @@
           '2tp/workshop/gridworld/state' (data) {
               this.hole = false
               let json = JSON.parse(data)
-              // console.log(json)
+              console.log(json)
 
               this.cols = parseInt(json.board_setup.nb_cols)
               this.rows = parseInt(json.board_setup.nb_rows)
