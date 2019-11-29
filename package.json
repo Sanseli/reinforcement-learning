@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.8.0",
+    "file-reader": "^1.1.1",
+    "filereader": "^0.10.3",
     "inquirer": "^7.0.0",
     "mqtt": "^3.0.0",
     "nuxt": "2.9.2",
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
-    "@nuxtjs/vuetify": "^1.0.0"
+    "@nuxtjs/vuetify": "^1.0.0",
+    "raw-loader": "^4.0.0"
   }
 }
