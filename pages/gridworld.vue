@@ -195,25 +195,17 @@
 
           // Grid 2
           getColor(row, col) {
-              // console.log(this.bestPath)
               const path = this.bestPath.find(p => p[0] === col && p[1] === row)
-              //
-              // console.log(path)
+
               if (path !== undefined) {
-              // for (let i = 0; i < this.bestPath.length; i++) {
-              //     if (col === this.bestPath[i][0] && row === this.bestPath[i][1]) {
                       return 'white'
-                  // }
               }
           },
           findActions(row, col) {
               const action = this.bestActions.find(a => a.y === row && a.x === col)
 
               if (action !== undefined) {
-              // for (let i = 0; i < this.bestActions.length; i++) {
-              //     if (this.bestActions[i].y === row && this.bestActions[i].x === col) {
                       return action.actions
-                  // }
               }
           },
           getWindowWidth(event) {
@@ -232,7 +224,6 @@
           '2tp/workshop/gridworld/state' (data) {
               if (this.hole) {this.hole = false}
               let json = JSON.parse(data)
-              console.log(json)
 
               this.cols = parseInt(json.board_setup.nb_cols)
               this.rows = parseInt(json.board_setup.nb_rows)
