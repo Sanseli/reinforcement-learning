@@ -20,19 +20,22 @@
               ]
           }
       },
-      methods: {
-          log() {
-              console.log(this.buff)
-          }
-      },
       beforeMount() {
-        this.$mqtt.subscribe('2tp/workshop/qtable')
+          const storedata = this.$store.state.qTableData;
+          if (storedata !== null) {
+              this.buff = storedata;
+          }
+
+          this.$mqtt.subscribe('2tp/workshop/qtable')
       },
       mqtt: {
           /** 'VueMqtt/publish1' or '+/publish1' */
           '2tp/workshop/qtable' (data) {
               this.buff = JSON.parse(data)
           }
+      },
+      beforeDestroy() {
+          this.$store.commit('setQTableData', this.buff)
       }
   }
 </script>
