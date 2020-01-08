@@ -62,8 +62,8 @@
         computed: {
             cardSize() {
                 if (this.windowWidth < this.windowHeight) {
-                    return (this.windowWidth / this.cols) / 1.5
-                } else return (this.windowHeight / this.cols) / 1.5
+                    return (this.windowWidth / this.cols) / 1.3
+                } else return (this.windowHeight / this.cols) / 1.3
             }
         },
         methods: {
@@ -104,7 +104,6 @@
                 }
             },
             switchNumbers(action, method) {
-                console.log(this.grid)
                 const firstIndex = this.getIndex(0).split(',');
                 let secondIndex = '';
 
@@ -119,7 +118,6 @@
                         break;
                 }
 
-                console.log(secondIndex)
                 if (secondIndex !== '') {
                     this.grid[parseInt(firstIndex[0])][parseInt(firstIndex[1])] = this.grid[parseInt(secondIndex.split(',')[0])][parseInt(secondIndex.split(',')[1])]
                     this.grid[parseInt(secondIndex.split(',')[0])][parseInt(secondIndex.split(',')[1])] = 0
@@ -144,7 +142,6 @@
         mqtt: {
             '2tp/workshop/slidingpuzzle/state' (data) {
                 let json = JSON.parse(data)
-                console.log(json)
 
                 this.rows = json.nb_rows
                 this.cols = json.nb_cols
