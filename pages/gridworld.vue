@@ -16,17 +16,17 @@
                     v-for="col in cols"
                     tile
                     style="border: 0; box-shadow: 0 0 0 0.5px rgba(9,90,34,0.66);"
-                    width="5em"
-                    height="5em"
                     id="card"
                     :img="getImg(row, col)"
+                    :width="cardSize"
+                    :height="cardSize"
                   >
                       <v-img
                         v-show="footstepsActive(row, col)"
-                        style="margin-left: 30%; margin-top: 65%;position: absolute"
-                        height="16px"
-                        width="30px"
+                        style="margin-left: 30%; margin-top: 68%;position: absolute"
                         position="absolute"
+                        :width="stepWidth"
+                        :height="stepHeight"
                         :src="require('~/assets/gridworld/footsteps.png')"
                       ></v-img>
 
@@ -34,24 +34,25 @@
                         v-if="col === end[0] && row === end[1]"
                         :src="getChestImg()"
                         style="margin-left: 20%; position: absolute; margin-top: 10%;"
-                        width="48px"
+                        :width="chestWidth"
+                        height="auto"
                       ></v-img>
 
                       <v-img
                         v-show="col === currentPosition[0] && row === currentPosition[1]"
                         :hidden="hole"
-                        style="margin-left: 30%; margin-top: 30%; position: absolute"
-                        height="45px"
-                        width="30px"
+                        style="margin-left: 32%; margin-top: 28%; position: absolute"
+                        :width="charWidth"
+                        :height="charHeight"
                         :src="require('~/assets/gridworld/char_down.png')"
                       ></v-img>
 
                       <v-img
                         v-show="hole && currentPosition[0] === col && row === currentPosition[1]"
                         :src="require('~/assets/gridworld/gone.png')"
-                        width="32px"
-                        height="32px"
-                        style="margin-left: 30%; margin-top: 35%"
+                        :width="charTrapSize"
+                        :height="charTrapSize"
+                        style="margin-left: 20%; margin-top: 24%"
                       ></v-img>
 
                   </v-card>
@@ -69,15 +70,16 @@
                     v-for="col in cols"
                     tile
                     style="border: 0; box-shadow: 0 0 0 0.5px #2f2f2f;"
-                    width="5em"
-                    height="5em"
+                    :width="cardSize"
+                    :height="cardSize"
                     :color="getColor(row, col)"
                   >
                       <v-img
-                          width="30px"
                           v-for="action of findActions(row, col)"
                           :src="require('~/assets/gridworld/arrow.png')"
                           :class="'arr'+ action"
+                          :height="arrSize"
+                          :width="arrSize"
                       ></v-img>
                   </v-card>
               </v-row>
@@ -107,6 +109,9 @@
               bestActions: [],
               hole: false,
 
+              windowWidth: 0,
+              windowHeight: 0,
+
               // Images
               // img
           }
@@ -116,6 +121,41 @@
               this.$mqtt.subscribe('2tp/workshop/gridworld/state')
           }
           else this.message = 'Websocket not connected'
+
+          this.$nextTick(function() {
+              window.addEventListener('resize', this.getWindowWidth);
+              window.addEventListener('resize', this.getWindowHeight);
+
+              //Init
+              this.getWindowWidth()
+              this.getWindowHeight()
+          })
+      },
+      computed: {
+          cardSize() {
+              return (this.windowWidth / 3) / this.cols
+          },
+          stepWidth() {
+              return ((this.windowWidth / 3) / this.cols) / 2.5
+          },
+          stepHeight() {
+              return ((this.windowWidth / 3) / this.cols) / 4.5
+          },
+          charWidth() {
+              return ((this.windowWidth / 3) / this.cols) / 2.3
+          },
+          charHeight() {
+              return ((this.windowWidth / 3) / this.cols) / 1.5
+          },
+          chestWidth() {
+              return ((this.windowWidth / 3) / this.cols) / 1.5
+          },
+          charTrapSize() {
+              return ((this.windowWidth / 3) / this.cols) / 1.8
+          },
+          arrSize() {
+              return ((this.windowWidth / 3) / this.cols) / 2.5
+          }
       },
       methods: {
           // Grid 1
@@ -186,6 +226,17 @@
                   // }
               }
           },
+          getWindowWidth(event) {
+              this.windowWidth = document.documentElement.clientWidth;
+          },
+
+          getWindowHeight(event) {
+              this.windowHeight = document.documentElement.clientHeight;
+          }
+      },
+      beforeDestroy() {
+          window.removeEventListener('resize', this.getWindowWidth);
+          window.removeEventListener('resize', this.getWindowHeight);
       },
       mqtt: {
           '2tp/workshop/gridworld/state' (data) {
