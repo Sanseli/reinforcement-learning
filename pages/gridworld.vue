@@ -1,9 +1,6 @@
 <template>
   <v-container fluid>
-      <v-row justify="center" style="height: 3em;">
-          <h1>{{message}}</h1>
-      </v-row>
-      <v-row>
+      <v-row style="margin-top: 3em">
           <v-col>
               <v-row
                 v-if="rows > 0"
@@ -54,7 +51,6 @@
                         :height="charTrapSize"
                         style="margin-left: 20%; margin-top: 24%"
                       ></v-img>
-
                   </v-card>
               </v-row>
           </v-col>
@@ -162,18 +158,12 @@
           getImg(row, col) {
               const obstacle = this.obstacles.find(o => o[0] === col && o[1] === row)
               if (obstacle !== undefined) {
-                  // for (let i = 0; i < this.obstacles.length; i++) {
-                  //     if (col === this.obstacles[i][0] && row === this.obstacles[i][1]) {
                   return require("~/assets/gridworld/obstacle3.png")
-                  // }
               }
 
               const hole = this.holes.find(h => h[0] === col && h[1] === row)
-              // for (let i = 0; i < this.holes.length; i++) {
-              //     if (col === this.holes[i][0] && row === this.holes[i][1]) {
               if (hole !== undefined) {
                       return require("~/assets/gridworld/hole2.png")
-                  // }
               }
 
               if (col === this.start[0] && row === this.start[1]) {
