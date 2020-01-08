@@ -4,7 +4,8 @@ const store = () => {
   return new Vuex.Store({
     state: {
       gridWorldData: null,
-      slidingPuzzleData: null
+      slidingPuzzleData: null,
+      qTableData: null
     },
     mutations: {
       setGridWorldData(state, data) {
@@ -12,6 +13,9 @@ const store = () => {
       },
       setSlidingPuzzleData(state, data) {
         state.slidingPuzzleData = data;
+      },
+      setQTableData(state, data) {
+        state.qTableData = data;
       }
     }
   })
