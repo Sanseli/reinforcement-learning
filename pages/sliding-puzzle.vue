@@ -1,9 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row justify="center" style="height: 3em;">
-      <h1>{{message}}</h1>
-    </v-row>
-    <v-row style="padding-top: 5em">
+    <v-row>
       <v-col>
         <v-row
           v-for="row in rows"
@@ -17,11 +14,11 @@
             class="ma-1 text-center"
             raised
             tile
-            width="10em"
-            height="10em"
+            :width="cardSize"
+            :height="cardSize"
             :color="getColor(state[row-1][col-1])"
           >
-            <h1 v-if="state[row-1][col-1] !== 0" style="font-size: 5em; padding: 10%">{{state[row-1][col-1]}}</h1>
+            <h1 v-if="state[row-1][col-1] !== 0" :style="`font-size: ${Math.round(cardSize) /2}px; padding: 10%`">{{state[row-1][col-1]}}</h1>
             <v-img :hidden="state[row-1][col-1] !== 0" :src="require('~/assets/sliding-puzzle/2tp.png')"></v-img>
           </v-card>
         </v-row>
@@ -41,14 +38,33 @@
                 rows: 0,
                 state: [],
 
-                message: ''
+                message: '',
+
+                windowWidth: 0,
+                windowHeight: 0,
             }
         },
         beforeMount() {
             if (this.$mqtt.connected) {
                 this.$mqtt.subscribe('2tp/workshop/slidingpuzzle/state')
             }
-            else this.message = 'Websocket not connected'
+            else this.message = 'Websocket not connected';
+
+            this.$nextTick(function() {
+                window.addEventListener('resize', this.getWindowWidth);
+                window.addEventListener('resize', this.getWindowHeight);
+
+                //Init
+                this.getWindowWidth();
+                this.getWindowHeight();
+            })
+        },
+        computed: {
+            cardSize() {
+                if (this.windowWidth < this.windowHeight) {
+                    return (this.windowWidth / this.cols) / 1.5
+                } else return (this.windowHeight / this.cols) / 1.5
+            }
         },
         methods: {
             shuffle() {
@@ -117,6 +133,12 @@
                 if (value === 0) {
                     return 'white'
                 }
+            },
+            getWindowWidth(event) {
+                this.windowWidth = document.documentElement.clientWidth;
+            },
+            getWindowHeight(event) {
+                this.windowHeight = document.documentElement.clientHeight;
             }
         },
         mqtt: {
