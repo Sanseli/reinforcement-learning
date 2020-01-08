@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
       <v-row justify="center" style="height: 3em;">
-        <h1>{{message}}</h1>
+        <h1 v-if="message">{{message}}</h1>
       </v-row>
       <v-row>
           <v-col>
@@ -111,7 +111,6 @@
               },
 
               hole: false,
-              message: '',
               windowWidth: 0,
               windowHeight: 0,
           }
@@ -125,15 +124,14 @@
           if (this.$mqtt.connected) {
               this.$mqtt.subscribe('2tp/workshop/gridworld/state')
           }
-          else this.message = 'Websocket not connected';
 
           this.$nextTick(function() {
               window.addEventListener('resize', this.getWindowWidth);
               window.addEventListener('resize', this.getWindowHeight);
 
               //Init
-              this.getWindowWidth()
-              this.getWindowHeight()
+              this.getWindowWidth();
+              this.getWindowHeight();
           })
       },
       computed: {
@@ -160,6 +158,14 @@
           },
           arrSize() {
               return ((this.windowWidth / 3) / this.grid.cols) / 2.5
+          },
+          message() {
+              if (!this.$mqtt.connected) {
+                  return 'Websocket not connected'
+              }
+              else if (this.grid.rows === 0) {
+                  return 'Nothing to display'
+              }
           }
       },
       methods: {
