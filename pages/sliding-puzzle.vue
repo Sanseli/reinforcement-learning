@@ -27,36 +27,7 @@
         </v-row>
 
       </v-col>
-<!--      <v-col cols="12">-->
-<!--        <v-row justify="center">-->
-<!--          <v-col-->
-<!--            cols="6"-->
-<!--            md="2"-->
-<!--          >-->
-<!--            <v-btn block @click="shuffle" :disabled="shuffling">-->
-<!--              Shuffle-->
-<!--            </v-btn>-->
-<!--          </v-col>-->
-
-<!--          <v-col-->
-<!--            cols="6"-->
-<!--            md="2"-->
-<!--          >-->
-<!--            <v-btn block @click="solve" :disabled="shuffling">-->
-<!--              Solve-->
-<!--            </v-btn>-->
-<!--          </v-col>-->
-<!--        </v-row>-->
-<!--      </v-col>-->
     </v-row>
-
-<!--    <v-snackbar-->
-<!--      top-->
-<!--      v-model="snackbar"-->
-<!--      :timeout="2000"-->
-<!--    >-->
-<!--      Solution not available for this grid. Reshuffling...-->
-<!--    </v-snackbar>-->
   </v-container>
 </template>
 
@@ -64,34 +35,6 @@
     export default {
         data () {
             return {
-                // alignmentsAvailable: [
-                //     'start',
-                //     'center',
-                //     'end',
-                //     'baseline',
-                //     'stretch',
-                // ],
-                // alignment: 'center',
-                // dense: false,
-                // justifyAvailable: [
-                //     'start',
-                //     'center',
-                //     'end',
-                //     'space-around',
-                //     'space-between',
-                // ],
-                // justify: 'center',
-                //
-                // grid: [[1, 2], [3, 0]],
-                //
-                // solutions: [],
-                //
-                // snackbar: false,
-                // count: 0,
-                // solved: false,
-                // shuffling: false,
-                // indexShuffle: 1,
-
                 buff: [],
 
                 cols: 0,
@@ -130,68 +73,15 @@
                 }, 200)
 
             },
-            // async solve() {
-            //
-            //     this.solutions = await this.$axios.$get(`http://localhost:8881/solve?grid=[[${this.grid[0][0]}, ${this.grid[0][1]}], [${this.grid[1][0]}, ${this.grid[1][1]}]]`)
-            //
-            //     if (this.solutions.length !== 0) {
-            //         this.count += 1
-            //
-            //         if (
-            //             this.grid[0][0] === 1 &&
-            //             this.grid[0][1] === 2 &&
-            //             this.grid[1][0] === 3 &&
-            //             this.grid[1][1] === 0
-            //         ) {
-            //             this.solved = true;
-            //         } else {
-            //             const solution = this.findAction();
-            //
-            //             if (solution === false) {
-            //                 this.snackbar = true;
-            //                 setTimeout(() => {
-            //                     this.shuffle()
-            //                 }, 1000)
-            //             } else {
-            //                 setTimeout(() => {
-            //                     this.switchNumbers(solution.action, 'solve')
-            //                 }, 1000)
-            //             }
-            //         }
-            //     }
-            // },
-            findAction() {
-                let solved = false;
-                let solutionFound = null;
-                for (let solution of this.solutions) {
-                    if (
-                        solution.configuration[0][0] === this.grid[0][0] &&
-                        solution.configuration[0][1] === this.grid[0][1] &&
-                        solution.configuration[1][0] === this.grid[1][0] &&
-                        solution.configuration[1][1] === this.grid[1][1]
-                    ) {
-                        solved = true;
-                        solutionFound = solution
-                    }
-                }
-
-                if (solved) {
-                    return solutionFound
-                }
-                else return false
-            },
             getIndex(number) {
                 if (this.grid[0][0] === number) {
                     return '0,0'
-                    // return 1
                 }
                 else if (this.grid[0][1] === number) {
                     return '0,1'
-                    // return 2
                 }
                 else if (this.grid[1][0] === number) {
                     return '1,0'
-                    // return 3
                 }
                 else if (this.grid[1][1] === number) {
                     return '1,1'
@@ -227,15 +117,6 @@
                 if (value === 0) {
                     return 'white'
                 }
-            },
-            getMessage() {
-                if (this.shuffling) {
-                    return 'Shuffling...'
-                }
-                else if (this.solved) {
-                    return 'Puzzle is solved!'
-                }
-                else return ''
             }
         },
         mqtt: {
