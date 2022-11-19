@@ -16,7 +16,7 @@
     "filereader": "^0.10.3",
     "inquirer": "^7.0.0",
     "mqtt": "^3.0.0",
-    "nuxt": "2.9.2",
+    "nuxt": "2.15.8",
     "vue-mqtt": "^2.0.3",
     "vuex": "3.1.1",
     "vuex-persistedstate": "2.5.4"
